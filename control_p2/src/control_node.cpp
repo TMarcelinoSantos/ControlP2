@@ -23,6 +23,9 @@ ControlP2::ControlP2() : Node("control_node")
     this->declare_parameter(PARAMS_TOPIC_MISSION, "pc_origin/system_status/critical_as/mission");
     this->get_parameter(PARAMS_TOPIC_MISSION, mission_topic);
 
+    this->declare_parameter(PARAMS_TOPIC_SLAM, "/ekf/state");
+    this->get_parameter(PARAMS_TOPIC_SLAM, slam_topic);
+
 
     /*------------------------------------------------------------------------------*/
     /*                                   PUBLISHERS                                 */
@@ -46,6 +49,40 @@ ControlP2::ControlP2() : Node("control_node")
     mission_subscriber = this->create_subscription<lart_msgs::msg::Mission>(
         mission_topic, 10, std::bind(&SpacNode::mission_callback, this, _1));
 
+    ekf_subscriber = this->create_subscription<geometry_msgs::msg::PoseStamped>(
+        slam_topic, 10, std::bind(&SpacNode::ekf_callback, this, _1));
+
+}
+
+void ControlP2::state_callback(const lart_msgs::msg::State::SharedPtr msg)
+{
+    // state logic for control
+}
+
+void ControlP2::mission_callback(const lart_msgs::msg::Mission::SharedPtr msg)
+{
+    // mission logic for control
+}
+
+void ControlP2::path_callback(const lart_msgs::msg::PathSpline::SharedPtr msg)
+{
+    // save current path
+}
+
+void ControlP2::speed_callback(const lart_msgs::msg::Dynamics::SharedPtr msg)
+{
+    // save current speed
+}
+
+void ControlP2::dispatchDynamicsCMD()
+{
+    // publish dynamics command
+}
+
+void ControlP2::cleanUp()
+{
+    // Send message of zero speed and zero steering angle
+    // Useful at the end of the program and emergency situations
 }
 
 int main(int argc, char *argv[])
