@@ -5,7 +5,7 @@ using std::placeholders::_1;
 ControlP2::ControlP2() : Node("control_node")
 {
     /*------------------------------------------------------------------------------*/
-    /*                                    FLAGS                                     */
+    /*                               FLAGS & PARAMETERS                             */
     /*------------------------------------------------------------------------------*/
 
     // ADD FLAGS GETTERS
@@ -33,8 +33,13 @@ ControlP2::ControlP2() : Node("control_node")
     mission_subscriber = this->create_subscription<lart_msgs::msg::Mission>(
         TOPIC_MISSION, 10, std::bind(&ControlP2::mission_callback, this, _1));
 
-    ekf_subscriber = this->create_subscription<geometry_msgs::msg::PoseStamped>(
-        TOPIC_SLAM, 10, std::bind(&ControlP2::ekf_callback, this, _1));
+    position_subscriber = this->create_subscription<geometry_msgs::msg::PoseStamped>(
+        TOPIC_SLAM, 10, std::bind(&ControlP2::pose_callback, this, _1));
+
+    /*------------------------------------------------------------------------------*/
+    /*                            CLASS INITIALIZATION                              */
+    /*------------------------------------------------------------------------------*/
+    target = new Target(/* PARAMETERS */);
 
 }
 
@@ -45,7 +50,7 @@ void ControlP2::state_callback(const lart_msgs::msg::State::SharedPtr msg)
     switch (msg->data)
     {
     case lart_msgs::msg::State::DRIVING:
-        /* code */
+        this->target->set_ready();
         break;
 
     case lart_msgs::msg::State::FINISH:
@@ -64,11 +69,16 @@ void ControlP2::mission_callback(const lart_msgs::msg::Mission::SharedPtr msg)
     RCLCPP_INFO(this->get_logger(), "Mission received: %d", msg->data);
 
     switch(msg->data){
+        case lart_msgs::msg::Mission::SKIDPAD:
+        case lart_msgs::msg::Mission::AUTOCROSS:
+        case lart_msgs::msg::Mission::TRACKDRIVE:
+            this->target->set_maxSpeed(this->max_speed);
+            break;
         case lart_msgs::msg::Mission::ACCELERATION:
-            this->target->set_mission(this->acc_speed);
+            this->target->set_maxSpeed(this->acc_speed);
             break;
         case lart_msgs::msg::Mission::EBS_TEST:
-            this->target->set_mission(this->ebs_speed);
+            this->target->set_maxSpeed(this->ebs_speed);
             break;
         default:
             break;
@@ -78,17 +88,20 @@ void ControlP2::mission_callback(const lart_msgs::msg::Mission::SharedPtr msg)
 void ControlP2::path_callback(const lart_msgs::msg::PathSpline::SharedPtr msg)
 {
     // save current path
+    this->target->set_path(*msg);
 }
 
-void ControlP2::speed_callback(const lart_msgs::msg::Dynamics::SharedPtr msg)
+void ControlP2::dynamics_callback(const lart_msgs::msg::Dynamics::SharedPtr msg)
 {
     // save current speed
+    this->target->set_dynamics(*msg);
 }
 
-void ControlP2::ekf_callback(const geometry_msgs::msg::PoseStamped::SharedPtr msg)
+void ControlP2::pose_callback(const geometry_msgs::msg::PoseStamped::SharedPtr msg)
 {
-    // save current position from ekf
-}   
+    // save current position from slam
+    this->target->set_pose(*msg);
+}
 
 void ControlP2::dispatchDynamicsCMD()
 {

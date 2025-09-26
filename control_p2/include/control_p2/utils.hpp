@@ -1,5 +1,15 @@
-#ifndef TOPICS_H_
-#define TOPICS_H_
+#ifndef UTILS_H_
+#define UTILS_H_
+
+/*------------------------------------------------------------------------------*/
+/*                                   INCLUDES                                   */
+/*------------------------------------------------------------------------------*/
+
+#include "lart_msgs/msg/dynamics_cmd.hpp"
+#include "lart_msgs/msg/dynamics.hpp"
+#include "lart_msgs/msg/path_spline.hpp"
+#include "lart_msgs/msg/state.hpp"
+#include "lart_msgs/msg/mission.hpp"
 
 /*------------------------------------------------------------------------------*/
 /*                                   TOPICS                                     */
