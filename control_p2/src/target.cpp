@@ -6,18 +6,18 @@ Target::Target(float mission_speed){
 }
 
 lart_msgs::msg::DynamicsCMD Target::getDynamicsCMD(){
-    // CALLS MULTIPLE FUNCTIONS ACORDING TO THE NECESSITIES OF THE FLAGS
     
     if(this->ready && this->mission_set){
 
-        float steeringAngle = calculate_steeringAngle(this->path);
+        // float steeringAngle = calculate_steeringAngle(this->path, this->currentPose);
+        // float speed = calculate_speed(/* PARAMETERS */);
 
-        float speed = calculate_speed(/* PARAMETERS */);
+        lart_msgs::msg::DynamicsCMD controlOutput = algorithm.calculate_control(this->currentPath, 
+            this->currentPose, this->currentSpeed, this->currentSteering, this->missionSpeed);
+        
+        //make if for option of getting speed from path planner
 
-        //create dispatcher with speed and steering
-        lart_msgs::msg::DynamicsCMD controlOutput = lart_msgs::msg::DynamicsCMD();
-        controlOutput.rpm = speed;
-        controlOutput.steering_angle = steeringAngle;
+        return controlOutput;
 
     }
 }
@@ -42,11 +42,6 @@ void Target::set_dynamics(lart_msgs::msg::Dynamics dynamics){
 
 void Target::set_pose(geometry_msgs::msg::PoseStamped pose){
     this->currentPose = pose;
-}
-
-int Target::calculate_speed(lart_msgs::msg::PathSpline path, uint8_t currentSpeed, float missionSpeed){
-
-    return 0;
 }
 
 

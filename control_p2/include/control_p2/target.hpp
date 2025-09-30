@@ -2,8 +2,6 @@
 #define TARGET_H_
 
 #include "math/pure_pursuit.hpp"
-#include "utils.hpp"
-
 
 class Target{
     public:
