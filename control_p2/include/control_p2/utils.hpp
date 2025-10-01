@@ -10,6 +10,7 @@
 #include "lart_msgs/msg/path_spline.hpp"
 #include "lart_msgs/msg/state.hpp"
 #include "lart_msgs/msg/mission.hpp"
+#include "lart_common.h"
 
 /*------------------------------------------------------------------------------*/
 /*                                   TOPICS                                     */
@@ -21,5 +22,24 @@
 #define TOPIC_STATE "/pc_origin/system_status/critical_as/state"
 #define TOPIC_MISSION "pc_origin/system_status/critical_as/mission"
 #define TOPIC_SLAM "/ekf/state"
+
+/*------------------------------------------------------------------------------*/
+/*                                  CONSTANTS                                   */
+/*------------------------------------------------------------------------------*/
+
+// La grabidad
+#define LART_GRAVITY 9.81f
+
+#define DEFAULT_IMU_TO_REAR_AXLE 1.15f
+
+// LOOKAHEAD PARAMETERS
+#define MAX_LOOKAHEAD 8.5f
+#define MIN_LOOKAHEAD 3.6f
+
+#define SPACE_BETWEEN_POINTS 0.50f
+#define MIN_TARGET_INDEX MIN_LOOKAHEAD/SPACE_BETWEEN_POINTS
+
+#define SIZE_AVG_ARRAY 3
+
 
 #endif
