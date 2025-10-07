@@ -6,7 +6,7 @@
 
 class ControlManager {
     public: 
-        ControlManager(float mission_speed);
+        ControlManager();
         void set_ready();
         void set_maxSpeed(float speed);
     private:

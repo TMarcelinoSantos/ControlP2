@@ -1,7 +1,7 @@
 #include "control_p2/control_manager.hpp"
 
-ControlManager::ControlManager(float mission_speed){
-    this->algorithm = Pursuit_Algorithm(mission_speed);
+ControlManager::ControlManager(){
+    this->algorithm = Pursuit_Algorithm();
 }
 
 lart_msgs::msg::DynamicsCMD ControlManager::getDynamicsCMD(){
