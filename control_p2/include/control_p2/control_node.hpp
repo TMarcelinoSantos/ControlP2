@@ -40,7 +40,7 @@ protected:
     void cleanUp();
 
     //Class
-    ControlManager control_manager;
+    ControlManager *control_manager;
 
 };
 
