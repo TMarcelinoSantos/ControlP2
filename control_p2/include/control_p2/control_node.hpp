@@ -40,10 +40,7 @@ protected:
     void cleanUp();
 
     //Class
-    ControlManager *control_manager;
-
-    // Parameters
-    VehicleConfig vehicle_config;
+    ControlManager control_manager;
 
 };
 
