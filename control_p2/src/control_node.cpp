@@ -21,11 +21,11 @@ ControlP2::ControlP2() : Node("control_node")
     /*                                  SUBSCRIBERS                                 */
     /*------------------------------------------------------------------------------*/
 
-    subscription_path = this->create_subscription<lart_msgs::msg::PathSpline>(
+    path_subscriber = this->create_subscription<lart_msgs::msg::PathSpline>(
         TOPIC_PATH, 10, std::bind(&ControlP2::path_callback, this, _1));
 
-    subscription_speed = this->create_subscription<lart_msgs::msg::Dynamics>(
-        TOPIC_SPEED, 10, std::bind(&ControlP2::speed_callback, this, _1));
+    dynamics_subscriber = this->create_subscription<lart_msgs::msg::Dynamics>(
+        TOPIC_DYNAMICS, 10, std::bind(&ControlP2::dynamics_callback, this, _1));
 
     state_subscriber = this->create_subscription<lart_msgs::msg::State>(
         TOPIC_STATE, 10, std::bind(&ControlP2::state_callback, this, _1));
@@ -39,14 +39,7 @@ ControlP2::ControlP2() : Node("control_node")
     /*------------------------------------------------------------------------------*/
     /*                            CLASS INITIALIZATION                              */
     /*------------------------------------------------------------------------------*/
-    target = new Target();
-
-
-    /*------------------------------------------------------------------------------*/
-    /*                                VEHICLE MODEL                                 */
-    /*------------------------------------------------------------------------------*/
-
-    LoadVehicleConfig("config/vehicle_config.yaml", this->vehicle_config);
+    control_manager = new ControlManager();
 
 }
 
@@ -57,7 +50,7 @@ void ControlP2::state_callback(const lart_msgs::msg::State::SharedPtr msg)
     switch (msg->data)
     {
     case lart_msgs::msg::State::DRIVING:
-        this->target->set_ready();
+        this->control_manager->set_ready();
         break;
 
     case lart_msgs::msg::State::FINISH:
@@ -79,13 +72,13 @@ void ControlP2::mission_callback(const lart_msgs::msg::Mission::SharedPtr msg)
         case lart_msgs::msg::Mission::SKIDPAD:
         case lart_msgs::msg::Mission::AUTOCROSS:
         case lart_msgs::msg::Mission::TRACKDRIVE:
-            this->target->set_maxSpeed(this->max_speed);
+            this->control_manager->set_maxSpeed(this->max_speed);
             break;
         case lart_msgs::msg::Mission::ACCELERATION:
-            this->target->set_maxSpeed(this->acc_speed);
+            this->control_manager->set_maxSpeed(this->acc_speed);
             break;
         case lart_msgs::msg::Mission::EBS_TEST:
-            this->target->set_maxSpeed(this->ebs_speed);
+            this->control_manager->set_maxSpeed(this->ebs_speed);
             break;
         default:
             break;
@@ -95,34 +88,25 @@ void ControlP2::mission_callback(const lart_msgs::msg::Mission::SharedPtr msg)
 void ControlP2::path_callback(const lart_msgs::msg::PathSpline::SharedPtr msg)
 {
     // save current path
-    this->target->set_path(*msg);
+    this->control_manager->set_path(*msg);
 }
 
 void ControlP2::dynamics_callback(const lart_msgs::msg::Dynamics::SharedPtr msg)
 {
     // save current speed
-    this->target->set_dynamics(*msg);
+    this->control_manager->set_dynamics(*msg);
 }
 
 void ControlP2::pose_callback(const geometry_msgs::msg::PoseStamped::SharedPtr msg)
 {
     // save current position from slam
-    this->target->set_pose(*msg);
+    this->control_manager->set_pose(*msg);
 }
 
 void ControlP2::dispatchDynamicsCMD()
 {
     // publish dynamics command
 }
-
-void ControlP2::LoadVehicleConfig(std::string filepath, VehicleConfig &config)
-{
-    // Load vehicle configuration from YAML file
-    std::ifstream file(filepath);
-    if (!file.is_open()) {
-        RCLCPP_ERROR(this->get_logger(), "Failed to open vehicle config file: %s", filepath.c_str());
-        return;
-    }
     
 
 void ControlP2::cleanUp()

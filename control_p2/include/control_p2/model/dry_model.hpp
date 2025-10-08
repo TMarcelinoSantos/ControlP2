@@ -1,7 +1,7 @@
 #ifndef DRY_MODEL_H_
 #define DRY_MODEL_H_
 
-#include "model/vehicle_config.hpp"  // Include VehicleConfig
+#include "control_p2/model/vehicle_config.hpp"  // Include VehicleConfig
 
 class DryModel : public VehicleConfig {
     public:

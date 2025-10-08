@@ -22,8 +22,9 @@ private:
 
     rclcpp::Subscription<lart_msgs::msg::State>::SharedPtr state_subscriber;
     rclcpp::Subscription<lart_msgs::msg::Mission>::SharedPtr mission_subscriber;
-    rclcpp::Subscription<lart_msgs::msg::PathSpline>::SharedPtr subscription_path;
-    rclcpp::Subscription<lart_msgs::msg::Dynamics>::SharedPtr subscription_speed;
+    rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr position_subscriber;
+    rclcpp::Subscription<lart_msgs::msg::PathSpline>::SharedPtr path_subscriber;
+    rclcpp::Subscription<lart_msgs::msg::Dynamics>::SharedPtr dynamics_subscriber;
 
 protected:
 
@@ -39,7 +40,7 @@ protected:
     void cleanUp();
 
     //Class
-    Target *target;
+    ControlManager *control_manager;
 
     // Parameters
     VehicleConfig vehicle_config;
