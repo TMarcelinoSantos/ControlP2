@@ -13,10 +13,10 @@ lart_msgs::msg::DynamicsCMD Pursuit_Algorithm::calculate_control(lart_msgs::msg:
     vector<array<float, 2>> path_points = transform_path(path);
 
     // Calculate look ahead point based on the speed with a min and max distances
-    float look_ahead_distance = clamp(speed_to_lookahead(speed), MIN_LOOKAHEAD, MAX_LOOKAHEAD);
+    float look_ahead_distance = clamp(speed_to_lookahead(current_speed), MIN_LOOKAHEAD, MAX_LOOKAHEAD);
     
     // Define the target point
-    array<float, 2> closest_point = get_closest_point(path_points, look_ahead_distance);
+    optional<array<float, 2>> closest_point = get_closest_point(path_points, look_ahead_distance);
     
     // If no closest point is found, return the current steering angle
     if (!closest_point.has_value())
