@@ -121,13 +121,13 @@ float Pursuit_Algorithm::calculate_desiredSpeed(lart_msgs::msg::PathSpline path)
     return 0.0;
 }
 
-void Pure_Pursuit::keepAvgAngle(float steering_angle){
+void Pursuit_Algorithm::keepAvgAngle(float steering_angle){
     int slot = cycles % SIZE_AVG_ARRAY;
     avg_angle[slot] = steering_angle;
     cycles++;
 }
 
-float Pure_Pursuit::getAvgAngle(){
+float Pursuit_Algorithm::getAvgAngle(){
     float sum = 0;
     int interval = SIZE_AVG_ARRAY;
 
