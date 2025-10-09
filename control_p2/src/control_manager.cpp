@@ -1,6 +1,7 @@
 #include "control_p2/control_manager.hpp"
 
 ControlManager::ControlManager(){
+    //Empty constructor
 }
 
 lart_msgs::msg::DynamicsCMD ControlManager::getDynamicsCMD(){
@@ -44,13 +45,13 @@ void ControlManager::set_mission(lart_msgs::msg::Mission mission){
         case lart_msgs::msg::Mission::SKIDPAD:
         case lart_msgs::msg::Mission::AUTOCROSS:
         case lart_msgs::msg::Mission::TRACKDRIVE:
-            this->algorithm = Pursuit_Algorithm(DEFAULT_MAX_SPEED);
+            this->algorithm = new Pursuit_Algorithm(DEFAULT_MAX_SPEED);
             break;
         case lart_msgs::msg::Mission::ACCELERATION:
-            this->algorithm = Pursuit_Algorithm(ACC_SPEED);
+            this->algorithm = new Pursuit_Algorithm(ACC_SPEED);
             break;
         case lart_msgs::msg::Mission::EBS_TEST:
-            this->algorithm = Pursuit_Algorithm(EBS_SPEED);
+            this->algorithm = new Pursuit_Algorithm(EBS_SPEED);
             break;
         default:
             break;
