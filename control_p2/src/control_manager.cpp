@@ -71,6 +71,22 @@ Pursuit_Algorithm * ControlManager::get_algorithm(){
     return this->algorithm;
 }
 
+lart_msgs::msg::PathSpline ControlManager::get_currentPath(){
+    return this->currentPath;
+}
+
+geometry_msgs::msg::PoseStamped ControlManager::get_currentPose(){
+    return this->currentPose;
+}
+
+float ControlManager::get_currentSpeed(){
+    return this->currentSpeed;
+}
+
+float ControlManager::get_currentSteering(){
+    return this->currentSteering;
+}
+
 // Add a lot of diferent options that can be activated with flags
 // Mostly an option to have a difrent aproach to the speed control
 // One in wich the speed control is expected from the path planner

@@ -122,9 +122,9 @@ TEST (tst_manager, GetStraightPathAngle){
     controlManager.set_dynamics(dynamics);
     controlManager.set_pose(pose_stamped);
 
-    lart_msgs::msg::DynamicsCMD controlOutput = controlManager.getDynamicsCMD(controlManager.currentPath,
-         controlManager.currentPose, controlManager.currentSpeed, controlManager.currentSteering);
-         
+    lart_msgs::msg::DynamicsCMD controlOutput = controlManager.getDynamicsCMD(controlManager.get_currentPath(),
+         controlManager.get_currentPose(), controlManager.get_currentSpeed(), controlManager.get_currentSteering());
+
     std::cerr << "[          ] steering angle = " << controlOutput.steering_angle << std::endl;
     ASSERT_NEAR(controlOutput.steering_angle, expected_steering_angle, 0.01);
 }
@@ -191,9 +191,9 @@ TEST (tst_manager, get_straight_angle){
     controlManager.set_dynamics(dynamics);
     controlManager.set_pose(pose_stamped);
 
-    lart_msgs::msg::DynamicsCMD controlOutput = controlManager.getDynamicsCMD(controlManager.currentPath,
-         controlManager.currentPose, controlManager.currentSpeed, controlManager.currentSteering);
-         
+    lart_msgs::msg::DynamicsCMD controlOutput = controlManager.getDynamicsCMD(controlManager.get_currentPath(),
+         controlManager.get_currentPose(), controlManager.get_currentSpeed(), controlManager.get_currentSteering());
+
     std::cerr << "[          ] steering angle = " << controlOutput.steering_angle << std::endl;
     ASSERT_NEAR(controlOutput.steering_angle, expected_steering_angle, 0.01);
 }

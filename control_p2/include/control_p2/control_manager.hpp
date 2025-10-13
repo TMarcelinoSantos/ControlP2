@@ -16,6 +16,10 @@ class ControlManager {
         bool is_ready();
         bool is_missionSet();
         Pursuit_Algorithm * get_algorithm();
+        lart_msgs::msg::PathSpline get_currentPath();
+        geometry_msgs::msg::PoseStamped get_currentPose();
+        float get_currentSpeed();
+        float get_currentSteering();
 
     private:
         Pursuit_Algorithm *algorithm;
