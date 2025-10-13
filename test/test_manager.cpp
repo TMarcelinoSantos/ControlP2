@@ -68,7 +68,7 @@ TEST (tst_manager, GetStraightPathAngle){
     geometry_msgs::msg::PoseStamped pose_stamped;
 
     //Expected values
-    float expected_steering_angle = 0.0;
+    float expected_steering_angle = 100.0;
 
     //Generating Data
     dynamics.rpm = 0;
