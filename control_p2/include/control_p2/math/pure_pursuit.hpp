@@ -29,7 +29,6 @@ class Pursuit_Algorithm {
         
         // Parameters
         int closest_point_index = -1;
-        float grip_coefficient;
         float avg_angle[SIZE_AVG_ARRAY] = {0};
         int cycles = 0;
         array<float, 2> target_point;

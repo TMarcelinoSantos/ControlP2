@@ -40,7 +40,7 @@ class VehicleConfig {
 
     public:
         // Constructor
-        VehicleConfig();
+        VehicleConfig() noexcept = default;
 
         // Getters
         float get_wheelbase() const { return wheelbase; }
