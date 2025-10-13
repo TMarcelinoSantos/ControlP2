@@ -32,7 +32,7 @@ TEST(ControlManagerTest, SetMission) {
     manager.set_mission(mission);
     ASSERT_TRUE(manager.is_missionSet());
     // Algorithm pointer should be set
-    ASSERT_NE(manager.algorithm, nullptr);
+    ASSERT_NE(manager.get_algorithm(), nullptr);
 }
 
 // Test setting path, dynamics, and pose
