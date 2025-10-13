@@ -30,7 +30,7 @@ void ControlManager::set_path(lart_msgs::msg::PathSpline path){
 }
 
 void ControlManager::set_dynamics(lart_msgs::msg::Dynamics dynamics){
-    this->currentSpeed = dynamics.rpm;
+    this->currentSpeed = RPM_TO_MS(dynamics.rpm);
     this->currentSteering = dynamics.steering_angle;
 }
 

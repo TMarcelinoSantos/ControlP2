@@ -22,7 +22,11 @@ lart_msgs::msg::DynamicsCMD Pursuit_Algorithm::calculate_control(lart_msgs::msg:
     if (!closest_point.has_value())
     {
         control_output.steering_angle = getAvgAngle();
+        control_output.rpm = 0;
+        
+        return control_output;
     }
+    // If the closest point is in front of the car then consider the desired angle to be 0
     if ((*closest_point)[0] == 0)
     {
         // Keep previous angles to calculate the average
@@ -34,6 +38,8 @@ lart_msgs::msg::DynamicsCMD Pursuit_Algorithm::calculate_control(lart_msgs::msg:
         set_target_point(target_point);
 
         control_output.steering_angle = getAvgAngle();
+        control_output.rpm = calculate_desiredSpeed(path);
+        return control_output;
     }
     // Calculate angle between the closest point and (0,0) (because the point is returned relative to (0,0)) instead of the rear!!
     float alpha = atan2((*closest_point)[1], (*closest_point)[0]);
@@ -49,7 +55,6 @@ lart_msgs::msg::DynamicsCMD Pursuit_Algorithm::calculate_control(lart_msgs::msg:
     control_output.rpm = calculate_desiredSpeed(path);
 
     return control_output;
-
 }
 
 vector<array<float, 2>> Pursuit_Algorithm::transform_path(lart_msgs::msg::PathSpline path){
@@ -90,8 +95,7 @@ vector<array<float, 2>> Pursuit_Algorithm::transform_path(lart_msgs::msg::PathSp
 }
 
 float Pursuit_Algorithm::speed_to_lookahead(float speed){
-    float ms_speed = RPM_TO_MS(speed);
-    float look_ahead_distance = 3.6f + 0.5f * ms_speed;
+    float look_ahead_distance = 3.6f + 0.5f * speed;
     return look_ahead_distance;
 }
 
