@@ -33,7 +33,7 @@ class Pursuit_Algorithm {
         int cycles = 0;
         array<float, 2> target_point;
         float missionSpeed;
-        DryModel vehicle = DryModel();
+        VehicleModel vehicle = VehicleModel();
         
 };
 
