@@ -15,6 +15,7 @@ class ControlManager {
         lart_msgs::msg::DynamicsCMD getDynamicsCMD();
         bool is_ready();
         bool is_missionSet();
+        Pursuit_Algorithm * get_algorithm();
 
     private:
         Pursuit_Algorithm *algorithm;

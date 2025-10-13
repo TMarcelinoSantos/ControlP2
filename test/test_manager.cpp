@@ -30,7 +30,7 @@ TEST(ControlManagerTest, SetMission) {
     lart_msgs::msg::Mission mission;
     mission.data = lart_msgs::msg::Mission::AUTOCROSS;
     manager.set_mission(mission);
-    ASSERT_TRUE(manager.missionSet);
+    ASSERT_TRUE(manager.is_missionSet());
     // Algorithm pointer should be set
     ASSERT_NE(manager.algorithm, nullptr);
 }

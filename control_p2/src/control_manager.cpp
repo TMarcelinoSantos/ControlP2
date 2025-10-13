@@ -67,6 +67,10 @@ bool ControlManager::is_missionSet(){
     return this->missionSet;
 }
 
+Pursuit_Algorithm * ControlManager::get_algorithm(){
+    return this->algorithm;
+}
+
 // Add a lot of diferent options that can be activated with flags
 // Mostly an option to have a difrent aproach to the speed control
 // One in wich the speed control is expected from the path planner
