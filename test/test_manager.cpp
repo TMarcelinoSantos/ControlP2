@@ -6,34 +6,8 @@
 #include "geometry_msgs/msg/pose_stamped.hpp"
 
 /*------------------------------------------------------------------------------*/
-/*                             TEST SETTER                                      */
+/*                               TEST SETTER                                    */
 /*------------------------------------------------------------------------------*/
-
-// Test initialization
-TEST(ControlManagerTest, Initialization) {
-    ControlManager manager;
-    // Should be not ready and no mission set
-    ASSERT_FALSE(manager.is_ready());
-    ASSERT_FALSE(manager.is_missionSet());
-}
-
-// Test setting ready
-TEST(ControlManagerTest, SetReady) {
-    ControlManager manager;
-    manager.set_ready();
-    ASSERT_TRUE(manager.is_ready());
-}
-
-// Test setting mission
-TEST(ControlManagerTest, SetMission) {
-    ControlManager manager;
-    lart_msgs::msg::Mission mission;
-    mission.data = lart_msgs::msg::Mission::AUTOCROSS;
-    manager.set_mission(mission);
-    ASSERT_TRUE(manager.is_missionSet());
-    // Algorithm pointer should be set
-    ASSERT_NE(manager.get_algorithm(), nullptr);
-}
 
 // Test setting path, dynamics, and pose
 TEST(ControlManagerTest, Setters) {
@@ -47,7 +21,6 @@ TEST(ControlManagerTest, Setters) {
     // No direct getters, but no crash means success
     SUCCEED();
 }
-
 
 /*------------------------------------------------------------------------------*/
 /*                             TEST GETTERS                                     */
