@@ -11,7 +11,7 @@ class ControlManager {
         void set_path(lart_msgs::msg::PathSpline path);
         void set_dynamics(lart_msgs::msg::Dynamics dynamics);
         void set_pose(geometry_msgs::msg::PoseStamped pose);
-        void set_mission(lart_msgs::msg::Mission mission);
+        void set_missionSpeed(float missionSpeed);
         lart_msgs::msg::DynamicsCMD getDynamicsCMD();
         bool is_ready();
         bool is_missionSet();
@@ -25,8 +25,6 @@ class ControlManager {
         Pursuit_Algorithm *algorithm;
     protected:
         // Parameters
-        bool ready = false;
-        bool missionSet = false;
         float currentSpeed;
         float currentSteering;
         float missionSpeed;

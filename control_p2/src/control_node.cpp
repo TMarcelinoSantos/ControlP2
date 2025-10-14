@@ -50,7 +50,7 @@ void ControlP2::state_callback(const lart_msgs::msg::State::SharedPtr msg)
     switch (msg->data)
     {
     case lart_msgs::msg::State::DRIVING:
-        this->control_manager->set_ready();
+        this->drivingSignalTimeStamp = msg->header.stamp;
         break;
 
     case lart_msgs::msg::State::FINISH:
@@ -67,11 +67,37 @@ void ControlP2::mission_callback(const lart_msgs::msg::Mission::SharedPtr msg)
 {
 
     RCLCPP_INFO(this->get_logger(), "Mission received: %d", msg->data);
-    this->control_manager->set_mission(*msg);
+
+    this->missionSet = true;
+
+    float msissionSpeed = 0.0;
+
+    switch(mission.data){
+        case lart_msgs::msg::Mission::SKIDPAD:
+        case lart_msgs::msg::Mission::AUTOCROSS:
+        case lart_msgs::msg::Mission::TRACKDRIVE:
+            missionSpeed = DEFAULT_MAX_SPEED;
+            break;
+        case lart_msgs::msg::Mission::ACCELERATION:
+            missionSpeed = ACC_SPEED;
+            break;
+        case lart_msgs::msg::Mission::EBS_TEST:
+            missionSpeed = EBS_SPEED;
+            break;
+        default:
+            break;
+    }
+
+    this->control_manager->set_missionSpeed(missionSpeed);
 }
 
 void ControlP2::path_callback(const lart_msgs::msg::PathSpline::SharedPtr msg)
 {
+    //Check if the car is ready to drive (3 seconds after the driving signal [FSG RULE BOOK 2026])
+    if(this->ready == false){
+        checkTimeStamp(msg->header.stamp);
+    }
+        
     // save current path
     this->control_manager->set_path(*msg);
 }
@@ -90,9 +116,22 @@ void ControlP2::pose_callback(const geometry_msgs::msg::PoseStamped::SharedPtr m
 
 void ControlP2::dispatchDynamicsCMD()
 {
+    if(!this->ready || !this->missionSet){
+        RCLCPP_WARN(this->get_logger(), "Control node not ready or mission not set, not sending commands");
+        return;
+    }
     // publish dynamics command
 }
-    
+
+void ControlP2::checkTimeStamp(rclcpp::Time msgTimeStamp)
+{
+    rclcpp::Duration timeDiff = this->drivingSignalTimeStamp - msgTimeStamp;
+    if (timeDiff.seconds() > 3.0)
+    {
+        RCLCPP_INFO(this->get_logger(), "3 seconds have passed since the Driving signal, the car can start");
+        this->ready = true;
+    }
+}
 
 void ControlP2::cleanUp()
 {
@@ -112,6 +151,3 @@ int main(int argc, char *argv[])
     rclcpp::shutdown();
     return 0;
 }
-
-
-// ADICIONAR TESTES UNITARIOS !!!! VAI SER DO CARAÇAS COM UMA INTERFACE QUE E GENERICA !!!!!

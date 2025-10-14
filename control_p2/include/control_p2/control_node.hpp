@@ -38,6 +38,12 @@ protected:
     // Functions
     void dispatchDynamicsCMD();
     void cleanUp();
+    void checkTimeStamp(rclcpp::Time msgTimeStamp)
+
+    // Parameters
+    bool ready = false;
+    bool missionSet = false;
+    rclcpp::Time drivingSignalTimeStamp;
 
     //Class
     ControlManager *control_manager;
