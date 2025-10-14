@@ -38,7 +38,7 @@ protected:
     // Functions
     void dispatchDynamicsCMD();
     void cleanUp();
-    void checkTimeStamp(rclcpp::Time msgTimeStamp)
+    void checkTimeStamp(rclcpp::Time msgTimeStamp);
 
     // Parameters
     bool ready = false;

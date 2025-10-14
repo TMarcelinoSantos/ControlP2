@@ -50,7 +50,7 @@ void ControlP2::state_callback(const lart_msgs::msg::State::SharedPtr msg)
     switch (msg->data)
     {
     case lart_msgs::msg::State::DRIVING:
-        this->drivingSignalTimeStamp = msg->header.stamp;
+        //this->drivingSignalTimeStamp = msg->header.stamp;
         break;
 
     case lart_msgs::msg::State::FINISH:
@@ -70,9 +70,9 @@ void ControlP2::mission_callback(const lart_msgs::msg::Mission::SharedPtr msg)
 
     this->missionSet = true;
 
-    float msissionSpeed = 0.0;
+    float missionSpeed = 0.0;
 
-    switch(mission.data){
+    switch(msg->data){
         case lart_msgs::msg::Mission::SKIDPAD:
         case lart_msgs::msg::Mission::AUTOCROSS:
         case lart_msgs::msg::Mission::TRACKDRIVE:
