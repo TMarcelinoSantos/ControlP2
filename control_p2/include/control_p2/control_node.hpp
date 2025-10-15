@@ -16,6 +16,13 @@ public:
 
     ControlP2();
 
+    // Callbacks
+    void state_callback(const lart_msgs::msg::State::SharedPtr msg);
+    void mission_callback(const lart_msgs::msg::Mission::SharedPtr msg);
+    void path_callback(const lart_msgs::msg::PathSpline::SharedPtr msg);
+    void dynamics_callback(const lart_msgs::msg::Dynamics::SharedPtr msg);
+    void pose_callback(const geometry_msgs::msg::PoseStamped::SharedPtr msg);
+
 private:
 
     rclcpp::Publisher<lart_msgs::msg::DynamicsCMD>::SharedPtr dynamics_publisher;
@@ -27,13 +34,6 @@ private:
     rclcpp::Subscription<lart_msgs::msg::Dynamics>::SharedPtr dynamics_subscriber;
 
 protected:
-
-    // Callbacks
-    void state_callback(const lart_msgs::msg::State::SharedPtr msg);
-    void mission_callback(const lart_msgs::msg::Mission::SharedPtr msg);
-    void path_callback(const lart_msgs::msg::PathSpline::SharedPtr msg);
-    void dynamics_callback(const lart_msgs::msg::Dynamics::SharedPtr msg);
-    void pose_callback(const geometry_msgs::msg::PoseStamped::SharedPtr msg);
 
     // Functions
     void dispatchDynamicsCMD();
