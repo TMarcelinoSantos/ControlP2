@@ -4,18 +4,24 @@ using std::placeholders::_1;
 
 ControlP2::ControlP2() : Node("control_node")
 {
-    /*------------------------------------------------------------------------------*/
-    /*                               FLAGS & PARAMETERS                             */
-    /*------------------------------------------------------------------------------*/
-
-    // ADD FLAGS GETTERS
-
 
     /*------------------------------------------------------------------------------*/
     /*                                   PUBLISHERS                                 */
     /*------------------------------------------------------------------------------*/
     
     dynamics_publisher = this->create_publisher<lart_msgs::msg::DynamicsCMD>(TOPIC_DYNAMICS_CMD, 10);
+
+
+    /*------------------------------------------------------------------------------*/
+    /*                                PUBLISHERS TIMER                              */
+    /*------------------------------------------------------------------------------*/
+
+    // Turn Hz into duration
+    std::chrono::duration<double> interval = std::chrono::duration<double>(1.0 / FREQUENCY);
+
+    control_timer = this->create_wall_timer(interval,
+        std::bind(&ControlP2::dispatchDynamicsCMD, this));
+
 
     /*------------------------------------------------------------------------------*/
     /*                                  SUBSCRIBERS                                 */
@@ -50,7 +56,7 @@ void ControlP2::state_callback(const lart_msgs::msg::State::SharedPtr msg)
     switch (msg->data)
     {
     case lart_msgs::msg::State::DRIVING:
-        //this->drivingSignalTimeStamp = msg->header.stamp;
+        this->drivingSignalTimeStamp = msg->header.stamp;
         break;
 
     case lart_msgs::msg::State::FINISH:
@@ -122,6 +128,8 @@ void ControlP2::dispatchDynamicsCMD()
         return;
     }
     // publish dynamics command
+    lart_msgs::msg::DynamicsCMD control_output = this->control_manager->getDynamicsCMD();
+    this->dynamics_publisher->publish(control_output);
 }
 
 void ControlP2::checkTimeStamp(rclcpp::Time msgTimeStamp)

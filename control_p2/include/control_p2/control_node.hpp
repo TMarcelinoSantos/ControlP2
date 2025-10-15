@@ -44,6 +44,8 @@ protected:
     bool ready = false;
     bool missionSet = false;
     rclcpp::Time drivingSignalTimeStamp;
+    rclcpp::TimerBase::SharedPtr control_timer;
+
 
     //Class
     ControlManager *control_manager;
