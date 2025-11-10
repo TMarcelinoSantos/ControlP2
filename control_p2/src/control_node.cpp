@@ -49,66 +49,13 @@ ControlP2::ControlP2() : Node("control_node")
     /*------------------------------------------------------------------------------*/
     control_manager = new ControlManager();
 
+    control_manager->set_missionSpeed(DEFAULT_MAX_SPEED);
+
 }
 
-void ControlP2::state_callback(const lart_msgs::msg::State::SharedPtr msg)
-{
-    RCLCPP_INFO(this->get_logger(), "State callback received: %d", msg->data);
-
-    switch (msg->data)
-    {
-    case lart_msgs::msg::State::DRIVING:
-        this->drivingSignalTimeStamp = msg->header.stamp;
-        break;
-
-    case lart_msgs::msg::State::FINISH:
-        this->race_finished = true;
-        break;
-
-    case lart_msgs::msg::State::EMERGENCY:
-        this->cleanUp();
-        break;
-    
-    default:
-        break;
-    }
-}
-
-void ControlP2::mission_callback(const lart_msgs::msg::Mission::SharedPtr msg)
-{
-
-    RCLCPP_INFO(this->get_logger(), "Mission received: %d", msg->data);
-
-    this->missionSet = true;
-
-    float missionSpeed = 0.0;
-
-    switch(msg->data){
-        case lart_msgs::msg::Mission::SKIDPAD:
-        case lart_msgs::msg::Mission::AUTOCROSS:
-        case lart_msgs::msg::Mission::TRACKDRIVE:
-            missionSpeed = DEFAULT_MAX_SPEED;
-            break;
-        case lart_msgs::msg::Mission::ACCELERATION:
-            missionSpeed = ACC_SPEED;
-            break;
-        case lart_msgs::msg::Mission::EBS_TEST:
-            missionSpeed = EBS_SPEED;
-            break;
-        default:
-            break;
-    }
-
-    this->control_manager->set_missionSpeed(missionSpeed);
-}
 
 void ControlP2::path_callback(const lart_msgs::msg::PathSpline::SharedPtr msg)
 {
-    //Check if the car is ready to drive (3 seconds after the driving signal [FSG RULE BOOK 2026])
-    if(this->ready == false){
-        checkTimeStamp(msg->header.stamp);
-    }
-        
     // save current path
     this->control_manager->set_path(*msg);
 }
@@ -127,16 +74,8 @@ void ControlP2::pose_callback(const geometry_msgs::msg::PoseStamped::SharedPtr m
 
 void ControlP2::dispatchDynamicsCMD()
 {
-    if(!this->ready || !this->missionSet){
-        RCLCPP_WARN(this->get_logger(), "Control node not ready or mission not set, not sending commands");
-        return;
-    }
 
     lart_msgs::msg::DynamicsCMD control_output = this->control_manager->getDynamicsCMD();
-
-    if(this->race_finished){
-        control_output.rpm = 0;
-    }
 
     // publish dynamics command
     this->dynamics_publisher->publish(control_output);
@@ -151,27 +90,6 @@ void ControlP2::dispatchDynamicsCMD()
     if(LOG_INFO){
         this->control_manager->log_info();
     }
-}
-
-void ControlP2::checkTimeStamp(rclcpp::Time msgTimeStamp)
-{
-    rclcpp::Duration timeDiff = this->drivingSignalTimeStamp - msgTimeStamp;
-    if (timeDiff.seconds() > 3.0)
-    {
-        RCLCPP_INFO(this->get_logger(), "3 seconds have passed since the Driving signal, the car can start");
-        this->ready = true;
-    }
-}
-
-void ControlP2::cleanUp()
-{
-    RCLCPP_INFO(this->get_logger(), "Cleaning up");
-    lart_msgs::msg::DynamicsCMD cleanUpMailBox = lart_msgs::msg::DynamicsCMD();
-    cleanUpMailBox.rpm = 0;
-    cleanUpMailBox.steering_angle = 0.0;
-
-    this->dynamics_publisher->publish(cleanUpMailBox);
-
 }
 
 int main(int argc, char *argv[])
