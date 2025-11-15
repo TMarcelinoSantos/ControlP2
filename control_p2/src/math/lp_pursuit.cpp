@@ -1,4 +1,4 @@
-#include "control_p2/math/pure_pursuit.hpp"
+#include "control_p2/math/lp_pursuit.hpp"
 
 Pursuit_Algorithm::Pursuit_Algorithm(float missionSpeed){
     this->missionSpeed = missionSpeed;
@@ -69,10 +69,9 @@ float Pursuit_Algorithm::speed_to_lookahead(float speed){
 }
 
 float Pursuit_Algorithm::lowPassFilter(float input, float dt) {
-        if (dt <= 0.0) return prevOutput;  // avoid division by zero
+        if (dt <= 0.0) return prevOutput.steering_angle;  // avoid division by zero
         float alpha = dt / (TAU + dt);
-        float output = alpha * input + (1.0 - alpha) * prevOutput;
-        prevOutput = output;
+        float output = alpha * input + (1.0 - alpha) * prevOutput.steering_angle;
         return output;
 }
 
