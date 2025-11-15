@@ -20,7 +20,7 @@
 
 #pragma region Algorithm & Model
 
-#define ALGORITHM  "math/pure_pursuit.hpp"
+#define ALGORITHM  "math/lp_pursuit.hpp"
 #define MODEL "model/dry_model.hpp"
 
 #pragma endregion
@@ -30,7 +30,7 @@
 
 #pragma region Maximum Speed for Each Mission
 
-#define DEFAULT_MAX_SPEED 6.0f
+#define DEFAULT_MAX_SPEED 2.5f
 #define ACC_SPEED 8.0f
 #define EBS_SPEED 2.0f
 
@@ -45,13 +45,23 @@
 
 #pragma endregion
 /*------------------------------------------------------------------------------*/
+/*                              ALGORITHM TUNING                                */
+/*------------------------------------------------------------------------------*/
+
+#pragma region Lookahead Time
+
+#define LOOKAHEAD_TIME 1.0f // seconds
+#define TAU 0.1f // seconds for low pass filter
+
+#pragma endregion
+/*------------------------------------------------------------------------------*/
 /*                                 DEBUG FLAGS                                  */
 /*------------------------------------------------------------------------------*/
 
 #pragma region Debug Flags
 
 #define TARGET_MARKER_VISIBLE true
-#define LOG_INFO true
+#define LOG_INFO false
 
 #pragma endregion
 
