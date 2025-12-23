@@ -52,6 +52,7 @@
 
 #define LOOKAHEAD_TIME 0.5f // seconds
 #define TAU 0.1f // seconds for low pass filter
+#define MAX_RPM_DELTA 3.0f // maximum change in RPM per control cycle
 
 #pragma endregion
 /*------------------------------------------------------------------------------*/

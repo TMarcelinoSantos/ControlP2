@@ -1,4 +1,5 @@
 #include "control_p2/math/lp_pursuit.hpp"
+#include <algorithm>
 
 Pursuit_Algorithm::Pursuit_Algorithm(float missionSpeed){
     this->missionSpeed = missionSpeed;
@@ -29,12 +30,22 @@ lart_msgs::msg::DynamicsCMD Pursuit_Algorithm::calculate_control(lart_msgs::msg:
     float dt = (currentTime - this->prevTime).seconds();
     this->prevTime = currentTime;
 
+    // Calculate desired speed and limit acceleration
+    float desired_speed = calculate_desiredSpeed(path);
+    float desired_rpm = MS_TO_RPM(desired_speed);
+    float prev_rpm = static_cast<float>(this->prevOutput.rpm);
+    float rpm_delta = desired_rpm - prev_rpm;
+    if (rpm_delta > MAX_RPM_DELTA) {
+        rpm_delta = MAX_RPM_DELTA;
+    }
+    float limited_rpm = prev_rpm + rpm_delta;
+
     // If the target point is in front of the car then consider the desired angle to be 0
     if(this->target_point.pose.position.y == 0){
 
         // Apply low pass filter to steering angle towards 0
         control_output.steering_angle = lowPassFilter(0.0f, dt);
-        control_output.rpm = MS_TO_RPM(calculate_desiredSpeed(path));
+        control_output.rpm = static_cast<decltype(control_output.rpm)>(limited_rpm);
 
         //save previous output
         this->prevOutput = control_output;
@@ -51,7 +62,7 @@ lart_msgs::msg::DynamicsCMD Pursuit_Algorithm::calculate_control(lart_msgs::msg:
 
     // Apply low pass filter to steering angle
     control_output.steering_angle = lowPassFilter(steering_angle, dt);
-    control_output.rpm = MS_TO_RPM(calculate_desiredSpeed(path));
+    control_output.rpm = static_cast<decltype(control_output.rpm)>(limited_rpm);
 
     //save previous output
     this->prevOutput = control_output;
