@@ -1,6 +1,4 @@
 #include "control_p2/control_node.hpp"
-#include <chrono>
-#include <optional>
 
 using std::placeholders::_1;
 
@@ -169,7 +167,7 @@ void ControlP2::checkTimeStamp()
 
     if (seconds > 3.0)
     {
-        RCLCPP_INFO(this->get_logger(), "3 seconds have passed since the Driving signal, the car can start");
+        RCLCPP_INFO(this->get_logger(), "3 seconds have passed since the Driving signal, ");
         this->ready = true;
     }
 }
