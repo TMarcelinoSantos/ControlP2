@@ -29,7 +29,7 @@
 #define TOPIC_DYNAMICS "/acu_origin/dynamics"
 #define TOPIC_DYNAMICS_CMD "pc_origin/dynamics"
 #define TOPIC_STATE "/pc_origin/system_status/critical_as/state"
-#define TOPIC_MISSION "pc_origin/system_status/critical_as/mission"
+#define TOPIC_MISSION "/pc_origin/system_status/critical_as/mission"
 #define TOPIC_SLAM "/ekf/state"
 #define TOPIC_TARGET_MARKER "/target_marker_topic"
 

@@ -5,11 +5,11 @@ set(library_name control_p2)
 set(lib_srcs
   src/control_node.cpp
   src/control_manager.cpp
-  src/math/pure_pursuit.cpp
+  src/math/lp_pursuit.cpp
 )
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+  add_compile_options(-Wall -Wextra -Wpedantic -Wno-unknown-pragmas)  # added -Wno-unknown-pragmas
 endif()
 
 # Find dependencies
@@ -29,8 +29,14 @@ include_directories(
 add_library(${library_name} ${lib_srcs})
 ament_target_dependencies(${library_name} rclcpp lart_msgs tf2 tf2_geometry_msgs visualization_msgs)
 
+# Ensure the warning is disabled for the library target as well
+target_compile_options(${library_name} PRIVATE -Wno-unknown-pragmas)
+
 add_executable(control_node src/control_node.cpp)
 ament_target_dependencies(control_node rclcpp lart_msgs tf2 tf2_geometry_msgs visualization_msgs)
+
+# Disable the warning for the executable target
+target_compile_options(control_node PRIVATE -Wno-unknown-pragmas)
 
 target_include_directories(control_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

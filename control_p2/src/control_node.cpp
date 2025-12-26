@@ -155,12 +155,14 @@ void ControlP2::dispatchDynamicsCMD()
 
 void ControlP2::checkTimeStamp(rclcpp::Time msgTimeStamp)
 {
-    rclcpp::Duration timeDiff = this->drivingSignalTimeStamp - msgTimeStamp;
-    if (timeDiff.seconds() > 3.0)
-    {
-        RCLCPP_INFO(this->get_logger(), "3 seconds have passed since the Driving signal, the car can start");
-        this->ready = true;
-    }
+    // rclcpp::Duration timeDiff = this->drivingSignalTimeStamp - msgTimeStamp;
+    // if (timeDiff.seconds() > 3.0)
+    // {
+    //     RCLCPP_INFO(this->get_logger(), "3 seconds have passed since the Driving signal, the car can start");
+    //     this->ready = true;
+    // }
+    this->ready = true;
+
 }
 
 void ControlP2::cleanUp()

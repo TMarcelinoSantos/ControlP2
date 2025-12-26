@@ -2,6 +2,7 @@
 #define LP_PURSUIT_H_
 
 #include "../utils.hpp"
+#include <rclcpp/rclcpp.hpp>
 
 #include <optional>
 #include <cmath>
@@ -33,7 +34,7 @@ class Pursuit_Algorithm {
         geometry_msgs::msg::PoseStamped target_point;
         float missionSpeed;
         VehicleModel vehicle = VehicleModel();
-        
+         
 };
 
 #endif

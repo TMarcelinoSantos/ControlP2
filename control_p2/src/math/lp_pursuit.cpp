@@ -1,16 +1,17 @@
 #include "control_p2/math/lp_pursuit.hpp"
 #include <algorithm>
 
-Pursuit_Algorithm::Pursuit_Algorithm(float missionSpeed){
-    this->missionSpeed = missionSpeed;
 
-    //Initialize previous output for the first iteration
-    this->prevOutput.steering_angle = 0.0f;
-    this->prevOutput.rpm = 0;
-
-    //Intialize previous time
-    this->prevTime = rclcpp::Clock().now();
-}
+Pursuit_Algorithm::Pursuit_Algorithm(float missionSpeed) {
+     this->missionSpeed = missionSpeed;
+ 
+     //Initialize previous output for the first iteration
+     this->prevOutput.steering_angle = 0.0f;
+     this->prevOutput.rpm = 0;
+ 
+     //Intialize previous time
+     this->prevTime = rclcpp::Clock().now();
+ }
 
 lart_msgs::msg::DynamicsCMD Pursuit_Algorithm::calculate_control(lart_msgs::msg::PathSpline path, geometry_msgs::msg::PoseStamped current_pose,
              float current_speed, float current_steering){
@@ -88,17 +89,17 @@ float Pursuit_Algorithm::lowPassFilter(float input, float dt) {
 
 float Pursuit_Algorithm::calculate_desiredSpeed(lart_msgs::msg::PathSpline path){
     if(closest_point_index > -1){
-        float curvature = abs(path.curvature[closest_point_index]);
-        
-        if(curvature < 0.0001){
-            curvature = 0.0001; // Avoid division by zero
+        float curvature = std::abs(path.curvature[closest_point_index]);
+
+        if(curvature < 0.0001f){
+            curvature = 0.0001f; // Avoid division by zero
         }
 
-        float velocity = sqrt(this->vehicle.get_grip_coefficient() * LART_GRAVITY * (1/curvature));
-        
+        float velocity = std::sqrt(this->vehicle.get_grip_coefficient() * LART_GRAVITY * (1.0f/curvature));
+
         return velocity;
     }
-    return 0.0;
+    return 0.0f;
 }
 
 geometry_msgs::msg::PoseStamped Pursuit_Algorithm::get_target_point()
